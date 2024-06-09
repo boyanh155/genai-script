@@ -5,8 +5,8 @@
 
 
 # keep main is clean
-*
-*/**/*
+# *
+# */**/*
 
-!.gitignore
-!README.md
+# .gitignore
+# README.md
