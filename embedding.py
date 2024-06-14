@@ -1,22 +1,22 @@
 # generate_embeddings.py
 from transformers import pipeline, AutoModel, AutoTokenizer
-import sys
-import json
-import requests
+
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 import torch
 
-import docx
-import io
+from pyvi.ViTokenizer import tokenize
+
 
 load_dotenv() 
 
-# 
-
-phobert = AutoModel.from_pretrained("vinai/phobert-base-v2")
-tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2")
+# model list:
+##  - vinai/phobert-base-v2
+##  - sentence-transformers/all-MiniLM-L6-v2
+##  - dangvantuan/vietnamese-embedding
+phobert = AutoModel.from_pretrained("dangvantuan/vietnamese-embedding")
+tokenizer = AutoTokenizer.from_pretrained("dangvantuan/vietnamese-embedding")
 
 # 
 
@@ -55,7 +55,7 @@ def search_query(query:str) ->list:
         print("=== Searching ===")
         print(query)
         query_vector = generate_embeddings(query)
-        print(query_vector)
+        # print(query_vector)
         all_services = services_collection.aggregate([
             {
                 "$vectorSearch":{
@@ -75,7 +75,7 @@ def search_query(query:str) ->list:
                 }
             }
         ])
-        print(list(all_services))
+        # print(list(all_services))
         return list(all_services)
     except Exception as e:
         raise e
@@ -98,7 +98,7 @@ def add_embedding():
         batch = all_services[i:i+BATCH_SIZE]
         for service in batch:
             embeddings = generate_embeddings(service["name"])
-            print(embeddings)
+            # print(embeddings)
             services_collection.update_one({"_id": service["_id"]}, {"$set": {"embedding": embeddings}})
 
 if __name__ == "__main__":
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     #  1. Add embeddings to all services
     # add_embedding()
     #  2. Search for services
-    search_query("त्वचा क्रीम")
+    search_query("Da tôi bị mụn, có dịch vụ nào không?")
