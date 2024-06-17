@@ -1,4 +1,4 @@
-from embedding import search_query
+from app import search_query
 from transformers import pipeline
 
 from datetime import date
@@ -16,7 +16,7 @@ from datetime import date
 
 
 if __name__ == '__main__':
-    query ="Tôi nhiều lông quá, có sản phẩm nào triệt lông không?"
+    query ="Sản phẩm làm bật tone da"
     docs = search_query(query)
     with open("conversation.txt", "a", encoding='utf-8') as f:
         f.write('-----------------------------------\n')
@@ -25,7 +25,6 @@ if __name__ == '__main__':
     generator = pipeline("text-generation", model="NlpHUST/gpt2-vietnamese",trust_remote_code=True)
     
     result = []
-    
     for i, doc in enumerate(docs):
         _name = doc["name"]
         if not _name:

@@ -1,0 +1,8 @@
+Flask
+transformers
+pymongo
+gunicorn
+Werkzeug
+python-dotenv
+torch
+pyvi
